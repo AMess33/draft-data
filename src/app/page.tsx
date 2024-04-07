@@ -1,4 +1,36 @@
 import Image from "next/image";
+import { any, element } from "prop-types";
+
+const puppeteer = require("puppeteer");
+
+(async () => {
+  const browser = await puppeteer.launch({
+    headless: false,
+    defaultViewport: null,
+    userDataDir: "./tmp",
+  });
+  const page = await browser.newPage();
+  await page.goto("https://www.cbssports.com/fantasy/football/draft/averages/");
+
+  const adpTable = await page.$$(".TableBase");
+
+  for (const adp of adpTable) {
+    const row = await page.evaluate(
+      (element: {
+        querySelector: (arg0: string) => {
+          (): any;
+          new (): any;
+          textContent: any;
+        };
+      }) =>
+        element.querySelector("span.CellPlayerName--short > span > a")
+          .textContent,
+      adp
+    );
+    console.log(row);
+  }
+  // await browser.close();
+})();
 
 export default function Home() {
   return (
