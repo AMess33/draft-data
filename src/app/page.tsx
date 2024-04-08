@@ -1,5 +1,51 @@
 import Image from "next/image";
 
+const puppeteer = require("puppeteer");
+const fs = require("fs");
+import { Browser } from "puppeteer";
+
+const url = "https://www.cbssports.com/fantasy/football/draft/averages/";
+
+const main = async () => {
+  const browser: Browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.goto(url);
+
+  const adpData = await page.evaluate(() => {
+    const playerRows = Array.from(
+      document.querySelectorAll(".TableBase-bodyTr")
+    );
+
+    const data = playerRows.map((player: any) => ({
+      rank: player.querySelector(" td:nth-child(1) ").innerText,
+      playerName: player.querySelector(
+        "td:nth-child(2) > span.CellPlayerName--long > span > a"
+      ).innerText,
+      position: player
+        .querySelector(
+          "td:nth-child(2) > span.CellPlayerName--long > span > span.CellPlayerName-position"
+        )
+        .innerText.trim(),
+      team: player
+        .querySelector(
+          " td:nth-child(2) > span.CellPlayerName--long > span > span.CellPlayerName-team "
+        )
+        .innerText.trim(),
+      adp: player.querySelector(" td:nth-child(4) ").innerText,
+      draftRange: player.querySelector(" td:nth-child(5) ").innerText,
+    }));
+    return data;
+  });
+  console.log(adpData);
+  await browser.close();
+  fs.writeFile("CBSadp.json", JSON.stringify(adpData), (err: any) => {
+    if (err) throw err;
+    console.log("The file has been saved!");
+  });
+};
+
+main();
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
