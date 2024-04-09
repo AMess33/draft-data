@@ -1,3 +1,11 @@
+```bash
+npm run dev
+
+localhost/3000
+
+console logging data on launch, reload to rerun
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
