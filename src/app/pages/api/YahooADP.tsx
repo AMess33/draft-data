@@ -17,13 +17,13 @@ const main = async () => {
   });
   const page = await browser.newPage();
   await page.goto(url);
-  // await page.waitForSelector("#fantasy-stat-table > div.Ovx\(a\).Bdw\(1px\).Bds\(s\).Bdc\(\$accent\).Bdrs\(8px\).Ov\(h\) > table > tbody", {
-  //   timeout: 10000,
-  // });
+  await page.waitForSelector("#fantasy-stat-table", {
+    timeout: 10000,
+  });
 
   const adpData = await page.evaluate(() => {
     const playerRows = Array.from(
-      document.querySelectorAll("#fantasy-stat-table > div[2] > table > tbody")
+      document.querySelectorAll("#fantasy-stat-table ")
     );
 
     const data = playerRows.map((player: any) => ({
