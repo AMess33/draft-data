@@ -9,17 +9,22 @@ const { executablePath } = require("puppeteer");
 
 const url = "https://fantasy.espn.com/football/livedraftresults";
 
-const getADPData = async () => {
+const ESPN_ADP = async () => {
   const browser: Browser = await puppeteer.launch({
     headless: true,
     executablePath: executablePath(),
   });
   const page = await browser.newPage();
   await page.goto(url);
-  await page.waitForSelector(".Table__TBODY", { timeout: 10000 });
+  await page.waitForSelector(
+    "td:nth-child(2) > div > div > div.jsx-1811044066.player-column_info.flex.flex-column > div > div.jsx-1811044066.player-column__athlete.flex > span > a",
+    { timeout: 10000 }
+  );
 
   const espnADP = await page.evaluate(() => {
-    const playerRows = Array.from(document.querySelectorAll(".Table__TBODY"));
+    const playerRows = Array.from(
+      document.querySelectorAll(".Table__TBODY > tr")
+    );
 
     const data = playerRows.map((player: any) => ({
       rank: player.querySelector("td:nth-child(1) > div").innerText,

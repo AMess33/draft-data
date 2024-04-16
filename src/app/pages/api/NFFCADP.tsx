@@ -14,6 +14,8 @@ const NFFC_Primetime_ADP = async () => {
   await page.select("#draft_type", "option:nth-child(2)");
   await page.waitForSelector("td:nth-child(2) > a", { timeout: 10000 });
 
+  //   date picker???
+
   const adpData = await page.evaluate(() => {
     const playerRows = Array.from(
       document.querySelectorAll("#adp > tbody > tr")
