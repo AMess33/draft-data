@@ -5,16 +5,43 @@ import { Browser } from "puppeteer";
 
 const url = "https://nfc.shgn.com/adp/football";
 
-const NFFC_Primetime_ADP = async () => {
-  const browser: Browser = await puppeteer.launch();
+let draft_types = [
+  {
+    lable: "Primetime",
+    value: "447",
+  },
+  {
+    lable: "Rotowire",
+    value: "446",
+  },
+  {
+    lable: "NFFC BestBall Overall",
+    value: "444",
+  },
+  {
+    lable: "Classic",
+    value: "442",
+  },
+  {
+    lable: "Guillotine",
+    value: "455",
+  },
+  {
+    lable: "Superflex",
+    value: "469",
+  },
+];
+
+const GET_NFFC_ADP = async (draft_type: { lable: string; value: string }) => {
+  const browser: Browser = await puppeteer.launch({});
   const page = await browser.newPage();
   await page.goto(url);
 
-  // select draft type drop down menu, then draft type desired
-  await page.select("#draft_type", "option:nth-child(2)");
-  await page.waitForSelector("td:nth-child(2) > a", { timeout: 10000 });
+  // inject date range values
 
-  //   date picker???
+  // select draft type drop down menu, then draft type desired
+  await page.select("select#draft_type", draft_type.value);
+  await page.waitForSelector("td:nth-child(2) > a", { timeout: 10000 });
 
   const adpData = await page.evaluate(() => {
     const playerRows = Array.from(
@@ -30,16 +57,31 @@ const NFFC_Primetime_ADP = async () => {
     }));
     return data;
   });
-
+  //   fs.writeFileSync(
+  //     `${draft_type.lable}.json`,
+  //     JSON.stringify(adpData),
+  //     (err: any) => {
+  //       if (err) throw err;
+  //       console.log("The file has been saved!");
+  //     }
+  //   );
   console.log(adpData);
   await browser.close();
 };
 
-NFFC_Primetime_ADP();
+draft_types.forEach((draft_type) => {
+  GET_NFFC_ADP(draft_type);
+});
 
-// primetime option:nth-child(3)
-// rotowire online option:nth-child(4)
-// NFFC BB online option:nth-child(5)
-// classic option:nth-child(11)
-// Guillotine option:nth-child(14)
-// superflex option:nth-child(17)
+// create array of selectors to pass in for each evaluate X
+// save each with selector title and current date
+
+// save date ranges in variables with day js
+// inject day js values into to date and from dates
+// submit button press X
+// wait for page load then evaluate X
+
+// current day = dayjs(0.format('YYYY-MM-DD'))
+// 2weeks = dayjs.fortnights(2).format('YYYY-MM-DD')
+
+// #from_date #to_date
