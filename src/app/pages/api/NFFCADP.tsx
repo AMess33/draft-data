@@ -4,8 +4,9 @@ import { Browser } from "puppeteer";
 const dayjs = require("dayjs");
 
 const currentDate = dayjs().format("MM-DD-YYYY");
-const twoWeeks = dayjs().subtract(2, "weeks").format("MM-DD-YYYY");
-const pastMonth = dayjs().subtract(1, "months").format("MM-DD-YYYY");
+const inputDate = dayjs().format("YYYY-MM-DD");
+const twoWeeks = dayjs().subtract(2, "weeks").format("YYYY-MM-DD");
+const pastMonth = dayjs().subtract(1, "months").format("YYYY-MM-DD");
 
 const url = "https://nfc.shgn.com/adp/football";
 
@@ -62,7 +63,7 @@ const GET_NFFC_ADP = async (draft_type: { lable: string; value: string }) => {
     return data;
   });
   //   fs.writeFileSync(
-  //     `${draft_type.lable}.json`,
+  //     `${draft_type.lable} ${currentDate}.json`,
   //     JSON.stringify(adpData),
   //     (err: any) => {
   //       if (err) throw err;
@@ -78,14 +79,11 @@ draft_types.forEach((draft_type) => {
 });
 
 // create array of selectors to pass in for each evaluate X
-// save each with selector title and current date
+// save each with selector title and current date X
 
-// save date ranges in variables with day js
+// save date ranges in variables with day js X
 // inject day js values into to date and from dates
 // submit button press X
 // wait for page load then evaluate X
-
-// current day = dayjs(0.format('YYYY-MM-DD'))
-// 2weeks = dayjs.fortnights(2).format('YYYY-MM-DD')
 
 // #from_date #to_date
