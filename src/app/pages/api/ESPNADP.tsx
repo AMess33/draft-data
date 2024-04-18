@@ -11,7 +11,7 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
 
 const ESPN_ADP = async () => {
   const browser: Browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     executablePath: executablePath(),
   });
   const page = await browser.newPage();
@@ -39,13 +39,19 @@ const ESPN_ADP = async () => {
       ).innerText,
       adp: player.querySelector("td:nth-child(3) > div").innerText,
       changeADP: player.querySelector("td:nth-child(4) > div > span").innerText,
-      auctionValue: player.querySelector("td:nth-child(5) > div").innerText,
+      auctionValue:
+        "$" + player.querySelector("td:nth-child(5) > div").innerText,
       auctionChange: player.querySelector("td:nth-child(6) > div > span")
         .innerText,
     }));
+
     return data;
   });
+  await page.click(".Pagination__Button--next");
 
   console.log(espnADP);
   await browser.close();
 };
+
+ESPN_ADP();
+// this is working, but need to redo the processes to allow for multiple pages
