@@ -3,8 +3,7 @@ const fs = require("fs");
 import { Browser } from "puppeteer";
 const dayjs = require("dayjs");
 
-const currentDate = dayjs().format("YYYY-MM-DD");
-
+const currentDate = dayjs().format("MM-DD-YYYY");
 const CBSStandard =
   "https://www.cbssports.com/fantasy/football/draft/averages/";
 

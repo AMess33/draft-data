@@ -4,7 +4,7 @@ const fs = require("fs");
 import { Browser } from "puppeteer";
 const dayjs = require("dayjs");
 
-const currentDate = dayjs().format("YYYY-MM-DD");
+const currentDate = dayjs().format("MM-DD-YYYY");
 
 puppeteer.use(StealthPlugin());
 
