@@ -1,7 +1,11 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
-
 import { Browser } from "puppeteer";
+const dayjs = require("dayjs");
+
+const currentDate = dayjs().format("YYYY-MM-DD");
+const twoWeeks = dayjs().subtract(2, "weeks").format("YYYY-MM-DD");
+const pastMonth = dayjs().subtract(1, "months").format("YYYY-MM-DD");
 
 const url = "https://nfc.shgn.com/adp/football";
 
