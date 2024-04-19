@@ -34,8 +34,8 @@ const Yahoo_ADP = async () => {
         .querySelector("td:nth-child(1) > div > div > div > div > span")
         .innerText.trim(),
       team: player
-        .querySelector(" td:nth-child(1) > div > div > div > div ")
-        .innerText.trim(),
+        .querySelector(" td:nth-child(1) > div > div > div > div:nth-child(2) ")
+        .innerText.slice(0, -5),
       adp: player.querySelector("td:nth-child(7) > div ").innerText,
       lastSevenDaysADP: player.querySelector(" td:nth-child(8) > div ")
         .innerText,
@@ -52,4 +52,4 @@ const Yahoo_ADP = async () => {
 
 Yahoo_ADP();
 
-// table body selector not found properly, id was changing on each page load/ then no id was present
+//url and element structure may change often?
