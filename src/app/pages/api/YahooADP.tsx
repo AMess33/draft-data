@@ -51,5 +51,3 @@ const Yahoo_ADP = async () => {
 };
 
 Yahoo_ADP();
-
-//url and element structure may change often?
