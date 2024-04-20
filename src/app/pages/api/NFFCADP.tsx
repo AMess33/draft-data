@@ -8,6 +8,8 @@ const inputDate = dayjs().format("MM-DD-YYYY");
 const twoWeeks = dayjs().subtract(2, "weeks").format("MM-DD-YYYY");
 const pastMonth = dayjs().subtract(1, "months").format("MM-DD-YYYY");
 
+// working as intended. double check once other draft types have adp data to scrape
+
 const url = "https://nfc.shgn.com/adp/football";
 
 let draft_types = [
