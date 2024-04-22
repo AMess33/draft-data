@@ -41,7 +41,7 @@ let draft_types = [
 ];
 
 const GET_NFFC_ADP = async (draft_type: { lable: string; value: string }) => {
-  const browser: Browser = await puppeteer.launch({ headless: false });
+  const browser: Browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(url);
 
