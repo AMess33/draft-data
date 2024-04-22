@@ -3,15 +3,14 @@ const fs = require("fs");
 import { Browser } from "puppeteer";
 const dayjs = require("dayjs");
 
+// setting dates and formats to use in webpage injection
 const currentDate = dayjs().format("MM-DD-YYYY");
 const inputDate = dayjs().format("MM-DD-YYYY");
 const twoWeeks = dayjs().subtract(2, "weeks").format("MM-DD-YYYY");
 const pastMonth = dayjs().subtract(1, "months").format("MM-DD-YYYY");
 
-// working as intended. double check once other draft types have adp data to scrape
-
 const url = "https://nfc.shgn.com/adp/football";
-
+// different draft types to select from draft type drop down menu
 let draft_types = [
   {
     lable: "Primetime",
@@ -45,7 +44,10 @@ const GET_NFFC_ADP = async (draft_type: { lable: string; value: string }) => {
   await page.goto(url);
 
   // inject date range values
-  await page.type("#from_date", twoWeeks);
+  // uncomment the one you want to use depending on time of year
+
+  await page.type("#from_date", pastMonth);
+  // await page.type("#from_date", twoWeeks);
   await page.type("#to_date", inputDate);
 
   // select draft type drop down menu, then draft type desired
@@ -66,26 +68,18 @@ const GET_NFFC_ADP = async (draft_type: { lable: string; value: string }) => {
     }));
     return data;
   });
+  // replace write file for your DB post/update
   fs.writeFileSync(
     `${draft_type.lable} ${currentDate}.json`,
     JSON.stringify(adpData),
     (err: any) => {
       if (err) throw err;
-      console.log("The file has been saved!");
     }
   );
-  console.log(adpData);
+  // closes puppeteer browser instance
   await browser.close();
 };
-
+// run the scraping function for each draft type from the draft types array
 draft_types.forEach((draft_type) => {
   GET_NFFC_ADP(draft_type);
 });
-
-// create array of selectors to pass in for each evaluate X
-// save each with selector title and current date X
-
-// save date ranges in variables with day js X
-// inject day js values into to date and from dates X
-// submit button press X
-// wait for page load then evaluate X

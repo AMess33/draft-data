@@ -3,15 +3,14 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const fs = require("fs");
 import { Browser } from "puppeteer";
 
+// steal plugin and executable path help avoid bot detection
 puppeteer.use(StealthPlugin());
-
 const { executablePath } = require("puppeteer");
 
 const url = "https://fantasy.espn.com/football/livedraftresults";
 
 (async () => {
   const browser: Browser = await puppeteer.launch({
-    headless: false,
     defaultViewport: false,
     executablePath: executablePath(),
   });
@@ -25,24 +24,22 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
   await page.waitForSelector("tbody > tr");
 
   while (!isBtnDisabled) {
-    console.log("*** RUNNING SCRAPE ***");
-    console.log({ firstPlayer });
-
     await page.waitForFunction(
+      // function to run in wait for function
+      // grab player name at top of current page
       (p) => {
         const player = document.querySelector<HTMLDivElement>(
           "tbody > tr > td:nth-child(2) > div"
         )?.title;
-
+        // check global variable vs current player
         if (!p || player !== p) {
-          console.log("*** NEW PAGE, SETTING PLAYER ***");
           return true;
         }
-
-        console.log("*** RETURNING FALSE ***");
         return false;
       },
+      // function arguments for slowing down webpage and allowing to load
       { polling: 5000, timeout: 60000 },
+      // pass in first player variable as argument
       firstPlayer
     );
 
@@ -54,7 +51,7 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
 
     firstPlayer = first ?? "";
 
-    console.log("*** GETTING PLAYER ROWS ***");
+    // select table row and loop through them for data scraping
 
     const playerRows = await page.$$(".Table__TBODY > tr");
 
@@ -67,14 +64,14 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
       let changeADP: any = "Null";
       let auctionValue: any = "Null";
       let auctionChange: any = "Null";
-
+      // scrape rank data
       try {
         rank = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(1) > div").innerText,
           playerData
         );
       } catch (error) {}
-
+      // scrape player name data
       try {
         playerName = await page.evaluate(
           (el: any) =>
@@ -84,7 +81,7 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
           playerData
         );
       } catch (error) {}
-
+      // scrape position data
       try {
         position = await page.evaluate(
           (el: any) =>
@@ -94,7 +91,7 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
           playerData
         );
       } catch (error) {}
-
+      // scrape team name data
       try {
         team = await page.evaluate(
           (el: any) =>
@@ -104,14 +101,14 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
           playerData
         );
       } catch (error) {}
-
+      // scrape adp data
       try {
         adp = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(3) > div").innerText,
           playerData
         );
       } catch (error) {}
-
+      // scrape adp change data
       try {
         changeADP = await page.evaluate(
           (el: any) =>
@@ -119,21 +116,21 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
           playerData
         );
       } catch (error) {}
-
+      // scrape auction value data
       try {
         auctionValue = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(5) > div").innerText,
           playerData
         );
       } catch (error) {}
-
+      // scrape auction change data
       try {
         auctionChange = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(6) > div").innerText,
           playerData
         );
       } catch (error) {}
-
+      // push player data into players array
       if (rank !== "Null") {
         players.push({
           rank,
@@ -148,24 +145,21 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
       }
     }
 
-    console.log("*** FINDING NEXT BTN ***");
-
+    // checking for last page status based on next button
     await page.waitForSelector(".Pagination__Button--next", {
       visible: true,
     });
-
     const is_disabled =
       (await page.$(".Pagination__Button--next.Button--disabled")) !== null;
 
     isBtnDisabled = is_disabled;
-    console.log("*** DISABLED:", is_disabled, "***");
 
     if (!is_disabled) {
-      console.log("*** CLICKING NEXT ***");
       await page.click(".Pagination__Button--next");
     }
   }
 
+  // replace write file for your DB post/update
   fs.writeFile(
     "espnADP.json",
     JSON.stringify({
@@ -175,6 +169,6 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
       if (err) throw err;
     }
   );
-
+  // closes puppeteer browser instance
   await browser.close();
 })();

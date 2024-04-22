@@ -5,6 +5,7 @@ const dayjs = require("dayjs");
 
 const currentDate = dayjs().format("MM-DD-YYYY");
 
+// urls for different draft types
 let url = [
   {
     url: "https://www.cbssports.com/fantasy/football/draft/averages/",
@@ -49,17 +50,16 @@ const CBS_ADP = async (url: { url: string; lable: string }) => {
     }));
     return data;
   });
-
-  console.log(adpData);
+  // close puppeteer browser instance
   await browser.close();
+  // replace write file for your DB post/update
   fs.writeFileSync(
     `${url.lable} ${currentDate}.json`,
     JSON.stringify(adpData),
     (err: any) => {
       if (err) throw err;
-      console.log("The file has been saved!");
     }
   );
 };
-
+// run scraping function for both urls in the url function
 url.forEach((url) => CBS_ADP(url));

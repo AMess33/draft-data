@@ -4,18 +4,17 @@ const fs = require("fs");
 import { Browser } from "puppeteer";
 const dayjs = require("dayjs");
 
-const currentDate = dayjs().format("MM-DD-YYYY");
-
+// steal plugin and executable path help avoid bot detection
 puppeteer.use(StealthPlugin());
-
 const { executablePath } = require("puppeteer");
+
+const currentDate = dayjs().format("MM-DD-YYYY");
 
 const url =
   "https://football.fantasysports.yahoo.com/f1/draftanalysis?type=standard";
 
 (async () => {
   const browser: Browser = await puppeteer.launch({
-    headless: false,
     defaultViewport: false,
     executablePath: executablePath(),
   });
@@ -26,6 +25,7 @@ const url =
   let players = new Array();
 
   while (!isBtnDisabled) {
+    // setting up table row looping to read data
     await page.waitForSelector("td:nth-child(2) > div", { timeout: 10000 });
 
     const playerRows = await page.$$("table > tbody > tr");
@@ -36,14 +36,14 @@ const url =
       let team: any = "Null";
       let adp: any = "Null";
       let lastSevenDaysADP: any = "Null";
-
+      // scraping rank data
       try {
         rank = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(2) > div").innerText,
           playerData
         );
       } catch (error) {}
-
+      // scraping player name data
       try {
         playerName = await page.evaluate(
           (el: any) =>
@@ -52,7 +52,7 @@ const url =
           playerData
         );
       } catch (error) {}
-
+      // scraping position data
       try {
         position = await page.evaluate(
           (el: any) =>
@@ -61,7 +61,7 @@ const url =
           playerData
         );
       } catch (error) {}
-
+      // scraping team data
       try {
         team = await page.evaluate(
           (el: any) =>
@@ -73,21 +73,21 @@ const url =
           playerData
         );
       } catch (error) {}
-
+      // scraping adp data
       try {
         adp = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(7) > div").innerText,
           playerData
         );
       } catch (error) {}
-
+      // scraping last seven days data
       try {
         lastSevenDaysADP = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(8) > div").innerText,
           playerData
         );
       } catch (error) {}
-
+      // pushing data to players array
       if (rank !== "Null") {
         players.push({
           rank,
@@ -99,7 +99,8 @@ const url =
         });
       }
     }
-
+    // checking next page button status to see if on last page
+    // using full xpath as yahoo has dynamic buttons
     await page.waitForSelector(
       "xpath/html/body/div[1]/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/section/div/div/div[2]/section/div[2]/div/div[2]/div/button[2]",
       {
@@ -125,6 +126,7 @@ const url =
       ]);
     }
   }
+  // replace write file for your DB post/update
   fs.writeFileSync(
     `${currentDate} yahooADP.json`,
     JSON.stringify({
@@ -134,6 +136,6 @@ const url =
       if (err) throw err;
     }
   );
-
+  // close puppeteer browser instance
   await browser.close();
 })();
