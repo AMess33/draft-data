@@ -43,7 +43,9 @@ let draft_types = [
 const GET_NFFC_ADP = async (draft_type: { lable: string; value: string }) => {
   const browser: Browser = await puppeteer.launch();
   const page = await browser.newPage();
-  await page.goto(url);
+  await page.goto(url).catch((err) => {
+    console.log("Webpage not found");
+  });
 
   // inject date range values
   // uncomment the one you want to use depending on time of year
@@ -54,7 +56,11 @@ const GET_NFFC_ADP = async (draft_type: { lable: string; value: string }) => {
 
   // select draft type drop down menu, then draft type desired
   await page.select("select#draft_type", draft_type.value);
-  await page.waitForSelector("td:nth-child(2) > a", { timeout: 10000 });
+  await page
+    .waitForSelector("td:nth-child(2) > a", { timeout: 10000 })
+    .catch((err) => {
+      console.log("No table data found");
+    });
 
   const adpData = await page.evaluate(() => {
     const playerRows = Array.from(
