@@ -21,14 +21,20 @@ const url =
     executablePath: executablePath(),
   });
   const page = await browser.newPage();
-  await page.goto(url);
+  await page.goto(url).catch((err) => {
+    console.log("Webpage not found");
+  });
 
   let isBtnDisabled = false;
   let players = new Array();
 
   while (!isBtnDisabled) {
     // setting up table row looping to read data
-    await page.waitForSelector("td:nth-child(2) > div", { timeout: 10000 });
+    await page
+      .waitForSelector("td:nth-child(2) > div", { timeout: 10000 })
+      .catch((err) => {
+        console.log("No table data found");
+      });
 
     const playerRows = await page.$$("table > tbody > tr");
     for (const playerData of playerRows) {
@@ -44,7 +50,9 @@ const url =
           (el: any) => el.querySelector("td:nth-child(2) > div").innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("rank selector not found");
+      }
       // scraping player name data
       try {
         playerName = await page.evaluate(
@@ -53,7 +61,9 @@ const url =
               .innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("player name selector not found");
+      }
       // scraping position data
       try {
         position = await page.evaluate(
@@ -62,7 +72,9 @@ const url =
               .innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("position selector not found");
+      }
       // scraping team data
       try {
         team = await page.evaluate(
@@ -74,21 +86,27 @@ const url =
               .innerText.slice(0, -5),
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("team selector not found");
+      }
       // scraping adp data
       try {
         adp = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(7) > div").innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("adp selector not found");
+      }
       // scraping last seven days data
       try {
         lastSevenDaysADP = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(8) > div").innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("last seven days selector not found");
+      }
       // pushing data to players array
       if (rank !== "Null") {
         players.push({

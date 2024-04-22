@@ -17,13 +17,17 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
     executablePath: executablePath(),
   });
   const page = await browser.newPage();
-  await page.goto(url);
+  await page.goto(url).catch((err) => {
+    console.log("Webpage not found");
+  });
 
   let players = new Array();
   let isBtnDisabled = false;
   let firstPlayer = "";
 
-  await page.waitForSelector("tbody > tr");
+  await page.waitForSelector("tbody > tr").catch((err) => {
+    console.log("No table data found");
+  });
 
   while (!isBtnDisabled) {
     await page.waitForFunction(
@@ -72,7 +76,9 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
           (el: any) => el.querySelector("td:nth-child(1) > div").innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("rank selector not found");
+      }
       // scrape player name data
       try {
         playerName = await page.evaluate(
@@ -82,7 +88,9 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
             ).innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("player name selector not found");
+      }
       // scrape position data
       try {
         position = await page.evaluate(
@@ -92,7 +100,9 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
             ).innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("position selector not found");
+      }
       // scrape team name data
       try {
         team = await page.evaluate(
@@ -102,14 +112,18 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
             ).innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("team selector not found");
+      }
       // scrape adp data
       try {
         adp = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(3) > div").innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("adp selector not found");
+      }
       // scrape adp change data
       try {
         changeADP = await page.evaluate(
@@ -117,21 +131,27 @@ const url = "https://fantasy.espn.com/football/livedraftresults";
             el.querySelector("td:nth-child(4) > div > span").innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("change adp selector not found");
+      }
       // scrape auction value data
       try {
         auctionValue = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(5) > div").innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("auction value selector not found");
+      }
       // scrape auction change data
       try {
         auctionChange = await page.evaluate(
           (el: any) => el.querySelector("td:nth-child(6) > div").innerText,
           playerData
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("auction change selector not found");
+      }
       // push player data into players array
       if (rank !== "Null") {
         players.push({

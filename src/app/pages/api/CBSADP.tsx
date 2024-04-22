@@ -26,8 +26,14 @@ const CBS_ADP = async (draftTypes: { url: string; lable: string }) => {
     executablePath: executablePath(),
   });
   const page = await browser.newPage();
-  await page.goto(draftTypes.url, { waitUntil: "domcontentloaded" });
-  await page.waitForSelector("table > tbody > tr");
+  await page
+    .goto(draftTypes.url, { waitUntil: "domcontentloaded" })
+    .catch((err) => {
+      console.log("Webpage not found");
+    });
+  await page.waitForSelector("table > tbody > tr").catch((err) => {
+    console.log("No table data found");
+  });
 
   const adpData = await page.evaluate(() => {
     const playerRows = Array.from(
