@@ -1,3 +1,5 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 import { Browser } from "puppeteer";

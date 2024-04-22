@@ -1,3 +1,5 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 import { Browser } from "puppeteer";
@@ -63,3 +65,5 @@ const CBS_ADP = async (url: { url: string; lable: string }) => {
 };
 // run scraping function for both urls in the url function
 url.forEach((url) => CBS_ADP(url));
+
+export default CBS_ADP;
