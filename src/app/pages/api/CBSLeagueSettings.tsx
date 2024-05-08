@@ -73,7 +73,7 @@ const CBS_League_Settings = async () => {
     const rosterLimits: any[] = [];
     const scoringSystem: any[] = [];
     const draftSettings: any[] = [];
-    let tableName = null;
+    let tableName: string | null = null;
 
     ruleRows.forEach((row) => {
       const headers = Array.from(row.querySelectorAll("th"));

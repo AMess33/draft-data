@@ -87,7 +87,7 @@ const Yahoo_League_Settings = async () => {
   fs.writeFileSync(
     "YahooLeagueSettings.json",
     JSON.stringify({ rulesData, ownerData }),
-    (err): any => {
+    (err: any): any => {
       if (err) throw err;
     }
   );

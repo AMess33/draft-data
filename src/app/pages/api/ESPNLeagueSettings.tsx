@@ -314,7 +314,7 @@ const ESPN_League_Settings = async () => {
         (rule) => rule.rule !== null
       ),
     }),
-    (err): any => {
+    (err: any): any => {
       if (err) throw err;
     }
   );
