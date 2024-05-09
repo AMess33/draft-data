@@ -53,9 +53,11 @@ const ESPN_League_Settings = async () => {
     `${password}`
   );
   // log in
-  await frame?.click(
-    "#did-ui-view > div > section > section > form > section > div.btn-group.touch-print-btn-group-wrapper > button"
-  );
+  await frame
+    ?.click(
+      "#did-ui-view > div > section > section > form > section > div.btn-group.touch-print-btn-group-wrapper > button"
+    )
+    .catch((err) => console.log(err, "login failed"));
   // wait for redirect to espn.com
   await page.waitForSelector(
     "#global-nav > ul > li.pillar.logo.fantasy.fantasy > a > span > span.link-text"
@@ -70,7 +72,9 @@ const ESPN_League_Settings = async () => {
   );
 
   // wait for selector to load
-  await page.waitForSelector(`text/${leagueName}`);
+  await page.waitForSelector(`text/${leagueName}`).catch((err) => {
+    console.log(err, "league name not found");
+  });
   // click on team based on users league name
   await page.click(`text/${leagueName}`);
 
