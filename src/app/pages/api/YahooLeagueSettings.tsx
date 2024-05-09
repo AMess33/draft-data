@@ -35,11 +35,15 @@ const Yahoo_League_Settings = async () => {
   await page.click("#login-signin");
   await page.waitForSelector("#login-passwd");
   await page.type("#login-passwd", `${password}`);
-  await page.click("#login-signin");
+  await page
+    .click("#login-signin")
+    .catch((err) => console.log(err, "sign in failed"));
 
   // click on league from my leagues table
   await page.waitForNavigation({ waitUntil: "networkidle0" });
-  await page.waitForSelector(`section#home-myleagues ::-p-text(${leagueName})`);
+  await page
+    .waitForSelector(`section#home-myleagues ::-p-text(${leagueName})`)
+    .catch((err) => console.log(err, "league not found"));
   await page.click(`section#home-myleagues ::-p-text(${leagueName})`);
   // grab league url and go to /settings page
   const url = await page.url();
