@@ -58,9 +58,11 @@ const signInPath = async (page) => {
   await page.waitForSelector("#password-input-field");
   // password input, sign in click
   await page.type("#password-input-field", `${password}`);
-  await page.click(
-    "#__next > div > div > div.styles__BodyWrapper-sc-1858ovt-1.ffwlTn > div > div.css-175oi2r.r-knv0ih.r-w7s2jr > button"
-  );
+  await page
+    .click(
+      "#__next > div > div > div.styles__BodyWrapper-sc-1858ovt-1.ffwlTn > div > div.css-175oi2r.r-knv0ih.r-w7s2jr > button"
+    )
+    .catch((err: any) => console.log(err, "sign in failed"));
   // wait for page load after login, then go to fantasy/myleagues page
   await page.waitForNavigation({ waitUntil: "networkidle0" });
   await page.goto(fantasyURL, { waitUntil: "domcontentloaded" });
@@ -72,7 +74,9 @@ const signInPath = async (page) => {
     "xpath/html/body/div[1]/div[1]/div/div/div[1]/div[1]/div[2]/div[2]/div[2]/div/div[1]"
   );
   // click on the league based off league name from drop down menu
-  await page.waitForSelector(`a.league-name ::-p-text(${leagueName})`);
+  await page
+    .waitForSelector(`a.league-name ::-p-text(${leagueName})`)
+    .catch((err: any) => console.log(err, "league name not found"));
   await page.click(`a.league-name ::-p-text(${leagueName})`);
 
   // get current url and add /settings to go to league settings page
@@ -82,7 +86,9 @@ const signInPath = async (page) => {
 
 const scrapeData = async (page) => {
   // scrape settings info table
-  await page.waitForSelector("ul.formItems");
+  await page.waitForSelector("ul.formItems").catch((err: any) => {
+    console.log("No settings found");
+  });
 
   const rulesData = await page.evaluate(() => {
     const ruleRows = Array.from(document.querySelectorAll("ul.formItems > li"));
@@ -100,7 +106,9 @@ const scrapeData = async (page) => {
   await page.goto(newURL, { waitUntil: "domcontentloaded" });
 
   // // scrape owners info table
-  await page.waitForSelector("div.tableWrap > table > tbody > tr");
+  await page
+    .waitForSelector("div.tableWrap > table > tbody > tr")
+    .catch((err: any) => console.log("No owners table found"));
 
   const ownerData = await page.evaluate(() => {
     const ownerRows = Array.from(
