@@ -18,7 +18,6 @@ const signInURL = `https://login.yahoo.com/config/login?.intl=us&.lang=en-US&.sr
 
 const Yahoo_League_Settings = async () => {
   const browser: Browser = await puppeteer.launch({
-    headless: false,
     executablePath: executablePath(),
   });
   // if account does not have 2FA activated nothing needed here

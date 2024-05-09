@@ -16,7 +16,6 @@ const url = "https://www.espn.com/login";
 
 const ESPN_League_Settings = async () => {
   const browser: Browser = await puppeteer.launch({
-    headless: false,
     defaultViewport: false,
     executablePath: executablePath(),
   });

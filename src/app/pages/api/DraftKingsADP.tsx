@@ -18,9 +18,7 @@ const url =
 
 const DraftKings_ADP = async () => {
   const browser = await puppeteer.launch({
-    headless: false,
     executablePath: executablePath(),
-    devtools: true,
   });
 
   const page = await browser.newPage();

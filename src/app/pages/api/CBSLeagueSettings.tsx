@@ -17,7 +17,6 @@ const url =
 
 const CBS_League_Settings = async () => {
   const browser: Browser = await puppeteer.launch({
-    headless: false,
     defaultViewport: false,
     executablePath: executablePath(),
   });

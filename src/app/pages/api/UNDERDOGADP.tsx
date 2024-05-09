@@ -17,9 +17,7 @@ const url = "https://underdogfantasy.com/login?next=%2Frankings%2Fnfl";
 
 const Underdog_ADP = async () => {
   const browser = await puppeteer.launch({
-    // headless: false,
     executablePath: executablePath(),
-    // devtools: true,
   });
 
   const page = await browser.newPage();

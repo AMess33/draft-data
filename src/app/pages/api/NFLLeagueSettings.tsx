@@ -26,7 +26,6 @@ const settingsURL = `https://fantasy.nfl.com/league/${leagueID}/settings`;
 const NFL_League_Settings = async () => {
   // if user knows league id, go directly to league settings page/ if not, set up log in routes to league settings page
   const browser: Browser = await puppeteer.launch({
-    headless: false,
     defaultViewport: false,
     executablePath: executablePath(),
   });
