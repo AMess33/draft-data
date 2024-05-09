@@ -52,14 +52,20 @@ const Underdog_ADP = async () => {
     "#root > div > div > div.styles__content__UZPqb > div.styles__splashContent__ncVyR > div.styles__formContent__PdEcR > form > div:nth-child(2) > label > div.styles__field__Q6LKF > input",
     `${password}`
   );
-  await page.click(
-    "#root > div > div > div.styles__content__UZPqb > div.styles__splashContent__ncVyR > div.styles__formContent__PdEcR > form > button"
-  );
+  await page
+    .click(
+      "#root > div > div > div.styles__content__UZPqb > div.styles__splashContent__ncVyR > div.styles__formContent__PdEcR > form > button"
+    )
+    .catch((err: any) => console.log(err, "login failed"));
   // after sign in redirected to adp page, wait for document to load
   await page.waitForNavigation({ waitUntil: "domcontentloaded" });
-  await page.waitForSelector(
-    "xpath/html/body/div[1]/div/div/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/div[1]"
-  );
+  await page
+    .waitForSelector(
+      "xpath/html/body/div[1]/div/div/div[2]/div[1]/div[2]/div[2]/div[1]/div/div/div[1]"
+    )
+    .catch((err: any) => {
+      console.log(err, "adp table not found");
+    });
   // scrape table for rendered rows
   const adpData = await page.evaluate(() => {
     const playerRows = Array.from(
@@ -166,7 +172,10 @@ const Underdog_ADP = async () => {
 
   fs.writeFileSync(
     `UnderDogADP${currentDate}.json`,
-    JSON.stringify({ adpData })
+    JSON.stringify({ adpData }),
+    (err: any) => {
+      if (err) throw err;
+    }
   );
 };
 
