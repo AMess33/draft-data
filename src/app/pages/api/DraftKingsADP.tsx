@@ -43,10 +43,14 @@ const DraftKings_ADP = async () => {
   await page.waitForSelector("#login-username-input");
   await page.type("#login-username-input", `${username}`);
   await page.type("#login-password-input", `${password}`);
-  await page.click("#login-submit");
+  await page
+    .click("#login-submit")
+    .catch((err: any) => console.log(err, "sign in failed"));
 
   await page.waitForNavigation({ waitUntil: "domcontentloaded" });
-  await page.waitForSelector("div.PlayerCell_player-name");
+  await page.waitForSelector("div.PlayerCell_player-name").catch((err: any) => {
+    console.log(err, "adp table not found");
+  });
   const adpData = await page.evaluate(() => {
     const playerRows = Array.from(
       document.querySelectorAll("div.BaseTable__row")
@@ -153,7 +157,10 @@ const DraftKings_ADP = async () => {
 
   fs.writeFileSync(
     `DraftKingsADP${currentDate}.json`,
-    JSON.stringify({ adpData })
+    JSON.stringify({ adpData }),
+    (err: any) => {
+      if (err) throw err;
+    }
   );
 };
 
