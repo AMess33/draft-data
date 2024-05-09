@@ -38,11 +38,15 @@ const CBS_League_Settings = async () => {
   );
 
   // click login button after entering credentials
-  await page.click("#app_login > div:nth-child(10) > button");
+  await page.click("#app_login > div:nth-child(10) > button").catch((err) => {
+    console.log(err, "login failed");
+  });
 
   // wait for navigation to my teams page
   // use users team name to select correct team
-  await page.waitForSelector(`text/${leagueName}`);
+  await page.waitForSelector(`text/${leagueName}`).catch((err) => {
+    console.log(err, "league name not found");
+  });
 
   await page.click(`text/${leagueName}`);
 
@@ -63,7 +67,7 @@ const CBS_League_Settings = async () => {
   await page.waitForSelector(
     "xpath/html/body/div[2]/div[6]/div[1]/div/div[2]/div[2]/div[1]/div[1]/div[2]/div/div/div/table/tbody/tr[1]/th[1]"
   );
-
+  // scrape league settings page
   const leagueSettingsData = await page.evaluate(() => {
     const ruleRows = Array.from(
       document.querySelectorAll("table > tbody > tr")
@@ -128,7 +132,7 @@ const CBS_League_Settings = async () => {
     };
   });
 
-  // Click on the link or button to navigate to another page
+  // navigate to owners page
   await Promise.all([
     page.waitForSelector(
       "#container > div:nth-child(7) > div:nth-child(2) > div > div.box-Rg.box-white > div.fantasyHeaderNav > ul > li:nth-child(2) > a"
@@ -139,11 +143,15 @@ const CBS_League_Settings = async () => {
   ]);
 
   // Wait for selector on the new page
-  await page.waitForSelector(
-    "#container > div:nth-child(7) > div:nth-child(2) > div > div.box-Rg.box-white > table > tbody > tr:nth-child(3) > td:nth-child(1) > a"
-  );
+  await page
+    .waitForSelector(
+      "#container > div:nth-child(7) > div:nth-child(2) > div > div.box-Rg.box-white > table > tbody > tr:nth-child(3) > td:nth-child(1) > a"
+    )
+    .catch((err) => {
+      console.log(err, "owners table not found");
+    });
 
-  // Collect data from the new page
+  // scrape owner page
   const ownersData = await page.evaluate(() => {
     const ownerRows = Array.from(document.querySelectorAll("tr.row1")).concat(
       Array.from(document.querySelectorAll("tr.row2"))
@@ -160,7 +168,10 @@ const CBS_League_Settings = async () => {
   // Write collected data to a file
   fs.writeFileSync(
     "CBSLeagueRules.json",
-    JSON.stringify({ leagueSettingsData, ownersData })
+    JSON.stringify({ leagueSettingsData, ownersData }),
+    (err: any) => {
+      if (err) throw err;
+    }
   );
 
   await browser.close();
