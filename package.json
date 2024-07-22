@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "adp": "npx tsx ./src/app/pages/api/FetchAllADP.tsx"
   },
   "dependencies": {
     "dayjs": "^1.11.10",
