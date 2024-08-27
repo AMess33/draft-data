@@ -24,6 +24,7 @@ const files = [
   "src/app/pages/api/SFBADP.tsx",
   "src/app/pages/api/YahooADP.tsx",
   "src/app/pages/api/UNDERDOGADP.tsx",
+  "src/app/pages/api/DLFRankings.tsx",
 ];
 for (const file of files) {
   runFile(file);
