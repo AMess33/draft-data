@@ -1,3 +1,5 @@
+// no ESPN data available yet
+
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const puppeteer = require("puppeteer-extra");
