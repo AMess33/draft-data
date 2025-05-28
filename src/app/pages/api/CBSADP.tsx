@@ -1,3 +1,6 @@
+// PPR is working as intended
+// No data in the Standard table yet
+
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const fs = require("fs");
