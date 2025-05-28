@@ -1,3 +1,5 @@
+// need a new URL once sfb goes live
+
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const fs = require("fs");
