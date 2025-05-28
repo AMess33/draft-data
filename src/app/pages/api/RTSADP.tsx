@@ -1,3 +1,5 @@
+// urls appear to be correct, but all returns had same data values, check that all urls are being input properly
+
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const fs = require("fs");
